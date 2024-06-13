@@ -78,6 +78,7 @@ namespace LA
 #include <deal.II/meshworker/simple.h>
 
 #include <deal.II/numerics/data_out.h>
+#include <deal.II/numerics/data_out_faces.h>
 #include <deal.II/numerics/error_estimator.h>
 #include <deal.II/numerics/vector_tools.h>
 
@@ -256,10 +257,16 @@ public:
   print_parameters() const;
 
   void
-  compute_boundary_stress(bool openfilefirsttime) const; // make const
+  compute_internal_and_boundary_stress(bool openfilefirsttime) const; // make const
 
   void
   output_pressure(bool openfilefirsttime) const;
+
+  std::string
+  output_stresses() const;
+
+  void 
+  compute_face_stress();
 
 private:
   const ElasticityProblemParameters<dim, spacedim> &par;
@@ -295,15 +302,35 @@ private:
   std::map<types::boundary_id, Tensor<1, spacedim>> average_displacements;
   std::map<types::boundary_id, Tensor<1, spacedim>> average_normals;
   std::map<types::boundary_id, double>              areas;
+  TrilinosWrappers::MPI::Vector                     sigma_n;
   // std::vector<BaseClass::BlockType>                 pressure_records;
 
   // Time dependency.
   double current_time = 0.0;
 
-  // mutable std::unique_ptr<HDF5::File> pressure_file;
-  // std::ofstream pressure_file;
-  // std::ofstream forces_file;
+  class Postprocessor;
 };
 
+//   template <int dim, int spacedim>
+//   class ElasticityProblem<dim, spacedim>::Postprocessor
+//     : public DataPostprocessor<spacedim>
+//   {
+//   public:
+//     Postprocessor(const unsigned int partition, const double minimal_pressure);
+//  
+//     virtual void evaluate_vector_field(
+//       const DataPostprocessorInputs::Vector<spacedim> &inputs,
+//       std::vector<Vector<double>> &computed_quantities) const override;
+//  
+//     virtual std::vector<std::string> get_names() const override;
+//  
+//     virtual std::vector<
+//       DataComponentInterpretation::DataComponentInterpretation>
+//     get_data_component_interpretation() const override;
+//  
+//     virtual UpdateFlags get_needed_update_flags() const override;
+//   };
+// 
+// 
 
 #endif

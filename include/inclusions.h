@@ -256,7 +256,7 @@ public:
   }
 
   /**
-   * @brief Get the normal
+   * @brief return normal direction of an inclusion at a quadrature point
    *
    * @param quadrature_id
    * @return const Tensor<1, spacedim>&
@@ -275,7 +275,12 @@ public:
       }
   }
 
-
+  /**
+   * @brief return weight for integration normal direction of an inclusion at a quadrature point
+   *
+   * @param quadrature_id
+   * @return const Tensor<1, spacedim>&
+   */
   inline double
   get_JxW(const types::global_dof_index &particle_id) const
   {
@@ -504,11 +509,11 @@ public:
     // coordinates
     compute_rotated_inclusion_data();
   }
+  
   /**
-   * @brief Update the displacement data after the initialization
-   * reading from a vector of lenght n_vessels (constant displacement along the
-   * vessel) or of lenght inclusions.size()
-   *
+   * @brief Update the displacement data after the initialization, 3D case only
+   * 
+   * @param new_data  vector of lenght equal to the number of inclusions or to the number of vessels, elements of the vector are the new values to be assigned for normal expansion
    */
   void
   update_inclusions_data(std::vector<double> new_data)
@@ -562,6 +567,13 @@ public:
     compute_rotated_inclusion_data();
   }
 
+  /**
+   * @brief 3D return the vessel that a given inclusion belongs to, 
+   * 2D return 0
+   *
+   * @param inclusion_id 
+   * @return unsigned int of vessel id
+   */
   int
   get_vesselID(const types::global_dof_index &inclusion_id) const
   {
@@ -590,6 +602,22 @@ public:
     return n_vessels;
   }
 
+  unsigned int
+  get_n_coefficients() const
+  {
+    return n_coefficients;
+  }
+
+  unsigned int
+  get_offset_coefficients() const
+  {
+    return offset_coefficients;
+  }
+
+  /**
+   * @brief compute the rotation of the data from local reference (data_file)
+   * to global reference system in the matrix assembly
+   */
   void
   compute_rotated_inclusion_data()
   {
@@ -618,7 +646,8 @@ public:
                 for (unsigned int d = 0; d < spacedim; ++d)
                   coef_phii[d] =
                     inclusions_data[inclusion_id][phi_i * spacedim + d];
-                auto rotated_phi_i = coef_phii * tensorR;
+                // auto rotated_phi_i = coef_phii * tensorR;
+                auto rotated_phi_i = tensorR * coef_phii;
                 rotated_phi_i.unroll(&rotated_phi[phi_i * spacedim],
                                      &rotated_phi[phi_i * spacedim + 3]);
               }
@@ -628,7 +657,12 @@ public:
       }
   }
 
-
+  /**
+   * @brief return the rotate the data of a given inclusion
+   * 
+   * @param inclusion_id 
+   * @return std::vector<double> rotated data
+   */
   std::vector<double>
   get_rotated_inclusion_data(const types::global_dof_index &inclusion_id)
   {

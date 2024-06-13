@@ -304,7 +304,7 @@ def cylinders(vertices, edges, resolution, radius, disp=np.zeros(2)):
 D = bpy.data
 
 mesh_name = 'cylinders'
-file_name = '/Users/heltai/c++/reduced_lagrange_multipliers/data/four_cylinders_R0025'
+file_name = '/home/camilla/Desktop/Project_Lagrangian_CODE/blender/test'
 
 n_nodes = 8
 radius = .0025
