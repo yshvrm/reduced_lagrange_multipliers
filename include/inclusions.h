@@ -509,10 +509,10 @@ public:
     // coordinates
     compute_rotated_inclusion_data();
   }
-  
+
   /**
    * @brief Update the displacement data after the initialization, 3D case only
-   * 
+   *
    * @param new_data  vector of lenght equal to the number of inclusions or to the number of vessels, elements of the vector are the new values to be assigned for normal expansion
    */
   void
@@ -568,10 +568,10 @@ public:
   }
 
   /**
-   * @brief 3D return the vessel that a given inclusion belongs to, 
+   * @brief 3D return the vessel that a given inclusion belongs to,
    * 2D return 0
    *
-   * @param inclusion_id 
+   * @param inclusion_id
    * @return unsigned int of vessel id
    */
   int
@@ -659,8 +659,8 @@ public:
 
   /**
    * @brief return the rotate the data of a given inclusion
-   * 
-   * @param inclusion_id 
+   *
+   * @param inclusion_id
    * @return std::vector<double> rotated data
    */
   std::vector<double>

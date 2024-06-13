@@ -257,7 +257,8 @@ public:
   print_parameters() const;
 
   void
-  compute_internal_and_boundary_stress(bool openfilefirsttime) const; // make const
+  compute_internal_and_boundary_stress(
+    bool openfilefirsttime) const; // make const
 
   void
   output_pressure(bool openfilefirsttime) const;
@@ -265,7 +266,7 @@ public:
   std::string
   output_stresses() const;
 
-  void 
+  void
   compute_face_stress();
 
 private:
@@ -316,21 +317,22 @@ private:
 //     : public DataPostprocessor<spacedim>
 //   {
 //   public:
-//     Postprocessor(const unsigned int partition, const double minimal_pressure);
-//  
+//     Postprocessor(const unsigned int partition, const double
+//     minimal_pressure);
+//
 //     virtual void evaluate_vector_field(
 //       const DataPostprocessorInputs::Vector<spacedim> &inputs,
 //       std::vector<Vector<double>> &computed_quantities) const override;
-//  
+//
 //     virtual std::vector<std::string> get_names() const override;
-//  
+//
 //     virtual std::vector<
 //       DataComponentInterpretation::DataComponentInterpretation>
 //     get_data_component_interpretation() const override;
-//  
+//
 //     virtual UpdateFlags get_needed_update_flags() const override;
 //   };
-// 
-// 
+//
+//
 
 #endif
