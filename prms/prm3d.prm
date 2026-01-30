@@ -11,15 +11,15 @@ end
 subsection Immersed Problem
   set Dirichlet boundary ids             = 
   set FE degree                          = 1
-  set Initial refinement                 = 0
+  set Inertia term                       = true
+  set Initial refinement                 = 1
   set Neumann boundary ids               = 
   set Normal flux boundary ids           = 
   set Output directory                   = output
   set Output name                        = solution
   set Output pressure                    = false
-  set Output results also before solving = false
+  set Output results also before solving = true
   set Pressure coupling                  = true
-  set Inertia term                       = true
   subsection Dirichlet boundary conditions
     set Function constants  = 
     set Function expression = 0; 0;0
@@ -32,15 +32,15 @@ subsection Immersed Problem
     set Weight expression   = 1.
   end
   subsection Grid generation
-    set Domain type              = generate
-    set Grid generator           = subdivided_hyper_rectangle
-    set Grid generator arguments = 40,40,40:0,0,0:0.3,0.3,0.3: true
+    set Domain type              = file
+    set Grid generator           = rampp_UCD.inp
+    set Grid generator arguments = 90,90,60:0,0,0:0.12,0.12,0.24:true
   end
   subsection Immersed inclusions
     set 3D 1D discretization                = 0.01
     set Bounding boxes extraction level     = 1
     set Data file                           = datafile
-    set Inclusions                          = 0.15,0.15,0.15,0,0,1,0.05,0
+    set Inclusions                          = -0,-0,-0,0,0,1,0,0
     set Inclusions file                     = 
     set Inclusions refinement               = 1
     set Number of fourier coefficients      = 4
@@ -58,34 +58,35 @@ subsection Immersed Problem
     set Variable names      = x,y,z,t
   end
   subsection Physical constants
-    set density = 1000.0
-    set Constituitive Model = linear elastic
-    set material file = 
-    subsection Linear Elasticity
-      set Lame mu = 1
-      set Lame lambda = 1
-    end
-    subsection Rayleigh Damping
-      set alpha            = 1
-      set beta             = 1
-    end
+    set Constituitive Model = kelvin voigt
+    set density             = 1000.0
+    set material file       = M3
     subsection Kelvin Voigt
-      set viscocity = 1
       set elasticity modulus = 1
+      set viscocity          = 0.001
+      set lame parameter     = 10000000
+    end
+    subsection Linear Elasticity
+      set Lame lambda = 0
+      set Lame mu     = 1000
     end
     subsection Maxwell
-      set relaxation time = 1
-      set elasticity modulus =1
+      set elasticity modulus = 2000
+      set relaxation time    = 0.01
     end
     subsection PML layer
-      set alpha = 1e-4
+      set alpha             = 1.0e-7
       set bottom left point = 0,0,0
-      set top right point = 0.3,0.3,0.3
-      set layer thickness = 0.1
+      set layer thickness   = 0.01
+      set top right point   = 0.12,0.12,0.24
+    end
+    subsection Rayleigh Damping
+      set alpha = 1
+      set beta  = 1
     end
     subsection Weak Boundary
       set Penalty term   = 1.0e8
-      set Wave Frequency = 1
+      set Wave Frequency = 10
       set Wave amplitude = 1
       set weak boundary  = true
     end
@@ -107,23 +108,23 @@ subsection Immersed Problem
       set Log frequency = 1
       set Log history   = false
       set Log result    = true
-      set Max steps     = 10000
-      set Reduction     = 1.e-6
-      set Tolerance     = 1.e-6
+      set Max steps     = 100000
+      set Reduction     = 1.e-12
+      set Tolerance     = 1.e-12
     end
     subsection Outer control
       set Log frequency = 1
       set Log history   = false
       set Log result    = true
-      set Max steps     = 10000
-      set Reduction     = 1.e-6
-      set Tolerance     = 1.e-6
+      set Max steps     = 100000
+      set Reduction     = 1.e-12
+      set Tolerance     = 1.e-12
     end
   end
   subsection Time dependency
-    set Final time   = 2.0
+    set Final time   = 1.0
     set Initial time = 0
-    set Time step    = 0.1
+    set Time step    = 0.0125
     set beta         = 0.25
     set gamma        = 0.5
   end
