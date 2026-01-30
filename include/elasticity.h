@@ -103,6 +103,9 @@ namespace LA
 #include <iomanip>
 #include <iostream>
 #include <memory>
+#include <algorithm>
+#include <cmath>
+#include <random>
 
 
 template <int dim, int spacedim = dim>
@@ -148,13 +151,14 @@ public:
   double                        rho                     = 1;
   double                        neta                    = 0;
   double                        elasticity_modulus_KV   = 1;
+  double                        lame_KV                 = 1;
   double                        elasticity_modulus_max  = 1;
   double                        relaxation_time         = 1;
   double                        alpha_ray               = 0.1;
   double                        beta_ray                = 0.01;
   std::string                   material_file           = "";
   std::string                   constituitive_model     = "linear elastic";
-  
+  double                        mat_num                 = 2;
 
   mutable ParameterAcceptorProxy<Functions::ParsedFunction<spacedim>> rhs;
   mutable ParameterAcceptorProxy<Functions::ParsedFunction<spacedim>>
@@ -237,6 +241,7 @@ ElasticityProblemParameters<dim, spacedim>::ElasticityProblemParameters()
   leave_subsection();
   enter_subsection("Physical constants");
   {
+    add_parameter("Number of random materials", mat_num);
     add_parameter("density", rho);
     enter_subsection("Weak Boundary");{
       add_parameter("weak boundary", weak_boundary);
@@ -271,6 +276,7 @@ ElasticityProblemParameters<dim, spacedim>::ElasticityProblemParameters()
     {
       add_parameter("viscocity", neta);
       add_parameter("elasticity modulus", elasticity_modulus_KV);
+      add_parameter("lame parameter", lame_KV);
     }
     leave_subsection();
     enter_subsection("Maxwell");
@@ -400,6 +406,8 @@ public:
   std::vector<std::vector<BoundingBox<spacedim>>> global_bounding_boxes;
   unsigned int                                    cycle = 0;
 
+  
+  
   FEValuesExtractors::Vector displacement;
 
   // Postprocessing values
